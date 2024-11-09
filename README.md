@@ -17,7 +17,6 @@ java-examples
 |----------------------|---------------------------|-----------------|
 | spring-boot          | 2.7.18                    |                 |
 | swagger              | 3.0.0                     | 和SpringBoot版本匹配 |
-| spring-cloud-alibaba | 2.2.1.RELEASE(Hoxton.SR3) | 核心框架            |
 | swagger              | 2.9.2                     | 接口文档            |
 | mybatis-plus         | 3.3.0                     | ORM框架           |
 
@@ -41,10 +40,17 @@ jasypt.encryptor.password=XXX
 
 ```properties
 #使用jasypt加密参数
+调用JasyptUtilTest.encrypt方法
 
 #使用jasypt解密参数
-
+调用JasyptUtilTest.decrypt方法
 #填写jasypt加密参数格式
-
+jasypt:
+    encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    property:
+        prefix: ENC(
+        suffix: )
 ```
 

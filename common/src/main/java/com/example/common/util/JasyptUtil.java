@@ -100,13 +100,4 @@ public class JasyptUtil {
         return encryptor.decrypt(decryptStr);
     }
 
-    public static void main(String[] args) {
-        String encryptedStr = "I am the string to be encrypted";
-        String algorithm = PBE_ALGORITHMS_MD5_DES;
-        String password = "salt";
-
-        String str = JasyptUtil.encrypt(encryptedStr, algorithm, password);
-        System.out.println("加密后的字符串：" + str);
-        System.out.println("解密后的字符串：" + JasyptUtil.decrypt(str, algorithm, password));
-    }
 }
