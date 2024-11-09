@@ -1,0 +1,48 @@
+jasypt:
+  encryptor:
+    # 指定加密方式
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+    property:
+      prefix: ENC(
+      suffix: )
+
+server:
+  mysql:
+    url: ENC(xXJw8NP+1ad9SJ/zbEenvHMGuIXL135k)
+    username: ENC(peTxXpQ7LyQGXVJBU+Mn8w==)
+    password: ENC(EKkj1W7oVuityALr/YooYg==)
+
+spring:
+  datasource:
+    dynamic:
+      primary: master
+      datasource:
+        master:
+          url: jdbc:mysql://${server.mysql.url}:3306/ms?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&autoReconnect=true&useSSL=true
+          username: ${server.mysql.username}
+          password: ${server.mysql.password}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: ENC(xwsi84Cgt0DPEQLIsp1yyraTv6faYWSoryfBBHnIUPc=)
+    password: ENC(2Imb71kUXHGTBzy5+eUbXWG9w4x72tlH9moFJZ8SCkA=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          startlls:
+            enable: true
+  elasticsearch:
+    uris: localhost:9200
+#    username: root
+#    password: freedom

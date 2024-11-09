@@ -1,0 +1,85 @@
+version: '3'
+services:
+  #  nginx:
+  #    image: nginx:1.22
+  #    container_name: nginx
+  #    volumes:
+  #      - /mydata/nginx/conf:/etc/nginx #配置文件目录挂载
+  #      - /mydata/nginx/html:/usr/share/nginx/html #静态资源根目录挂载
+  #      - /mydata/nginx/logs:/var/log/nginx #日志文件目录挂载
+  #    ports:
+  #      - 80:80
+  rabbitmq:
+    image: rabbitmq:3.9.11-management
+    container_name: rabbitmq
+    volumes:
+      - /mydata/rabbitmq/data:/var/lib/rabbitmq #数据文件目录挂载
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+  es01:
+    image: elasticsearch:7.17.15
+    container_name: es01
+    restart: always
+    environment:
+      - "cluster.name=elasticsearch" #设置集群名称为elasticsearch
+      - "discovery.type=single-node" #以单一节点模式启动
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx1024m" #设置es使用的jvm内存大小
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - /mydata/elasticsearch/data:/usr/share/elasticsearch/data #数据文件，具名挂载，宿主机对应目录/var/lib/docker/volume
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      elastic:
+        aliases:
+          - es01 # 该容器的别名，在elastic网络中其他容器可以通过别名es来访问到该容器
+  logstash:
+    image: logstash:7.17.15
+    container_name: logstash
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /mydata/logstash/logstash.conf:/usr/share/logstash/conf.d/logstash.conf #配置文件挂载
+    depends_on:
+      - es01 #kibana在elasticsearch启动之后再启动
+    ports:
+      - 4560:4560
+      - 4561:4561
+      - 4562:4562
+      - 4563:4563
+    networks:
+      elastic:
+        aliases:
+          - logstash
+  kibana:
+    image: kibana:7.17.15
+    container_name: kibana
+    restart: always
+    depends_on:
+      - es01 #kibana在elasticsearch启动之后再启动
+    environment:
+      - "elasticsearch.hosts=http://es01:9200" #设置访问elasticsearch的地址
+    ports:
+      - 5601:5601
+    networks:
+      elastic:
+        aliases:
+          - kibana
+
+#volumes:
+#  elastic-data01:
+#    driver: local
+
+# 创建的桥接模式网络，容器间可以通过服务名字建立通讯
+networks:
+  elastic:
+    driver: bridge
