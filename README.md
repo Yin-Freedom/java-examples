@@ -6,6 +6,7 @@ java-examples
 ├── common        -- 公共模块，返回结果封装，异常，Swagger基础配置，jasypt加密工具，日志配置
 ├── swagger       -- swagger示例，http://localhost:8080/swagger-ui/index.html
 ├── mybatis       -- mybatis示例
+├── h2database    -- h2数据库示例，方便本地运行
 ├── rabbitmq      -- rabbitmq示例
 ├── search        -- elasticsearch+mq示例
 └── 
